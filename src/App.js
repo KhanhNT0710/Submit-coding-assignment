@@ -11,7 +11,7 @@ const generateRandomNumbers = (count) => {
 };
 
 const getRandomPosition = (maxWidth, maxHeight, radius, positions) => {
-  const maxAttempts = 100; // Giới hạn số lần thử
+  const maxAttempts = 100;
   let attempt = 0;
   let position;
 
@@ -38,7 +38,6 @@ const getRandomPosition = (maxWidth, maxHeight, radius, positions) => {
     attempt++;
   }
 
-  // Nếu không tìm được vị trí hợp lệ, cho phép chồng chéo
   return position;
 };
 
