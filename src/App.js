@@ -11,15 +11,16 @@ const generateRandomNumbers = (count) => {
 };
 
 const getRandomPosition = (maxWidth, maxHeight, radius, positions) => {
+  const maxAttempts = 100; // Giới hạn số lần thử
+  let attempt = 0;
   let position;
-  let overlap;
 
-  do {
-    overlap = false;
+  while (attempt < maxAttempts) {
     const x = Math.floor(Math.random() * (maxWidth - 2 * radius));
     const y = Math.floor(Math.random() * (maxHeight - 2 * radius));
     position = { x, y };
 
+    let overlap = false;
     for (let pos of positions) {
       const distance = Math.sqrt(
         (x - pos.x) * (x - pos.x) + (y - pos.y) * (y - pos.y)
@@ -29,10 +30,18 @@ const getRandomPosition = (maxWidth, maxHeight, radius, positions) => {
         break;
       }
     }
-  } while (overlap);
 
+    if (!overlap) {
+      return position;
+    }
+
+    attempt++;
+  }
+
+  // Nếu không tìm được vị trí hợp lệ, cho phép chồng chéo
   return position;
 };
+
 
 const Game = () => {
   const [numberCount, setNumberCount] = useState(10);
@@ -72,6 +81,7 @@ const Game = () => {
     }
     setPositions(newPositions);
   };
+
 
   const resetGame = () => {
     setRandomNumbers([]);
@@ -188,7 +198,7 @@ const Game = () => {
               top: `${positions[index]?.y || 0}px`,
               width: "50px",
               height: "50px",
-              backgroundColor: clickedNumbers.includes(number) ? "#FF0000" : "transparent",
+              backgroundColor: clickedNumbers.includes(number) ? "#FF0000" : "#FFFFFF",
               color: "black",
               borderRadius: "50%",
               display: "flex",
@@ -199,6 +209,7 @@ const Game = () => {
               border: "2px solid black",
               opacity: fadeNumbers.includes(number) ? 0 : 1,
               transition: "opacity 1s ease",
+              zIndex: numberCount - number
             }}
           >
             {number}
